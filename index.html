@@ -1,1 +1,982 @@
-<!doctype html><meta charset="utf-8"><title>HUMANN Roadmap</title><h1>HUMANN Roadmap</h1><p>Placeholder — Gantt generated after Jira/Confluence research.</p>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>HUMANN — Shopify Horizon Redesign Roadmap</title>
+<meta name="description" content="HUMANN Shopify Horizon redesign roadmap — full engagement to Aug 17 go-live.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%F0%9F%A7%AC%3C/text%3E%3C/svg%3E">
+<style>
+  :root {
+    --ground: #F4F6F8;
+    --ground-elev: #E9ECEF;
+    --ink: #1A1F1A;
+    --ink-mid: #4D5249;
+    --ink-mute: #8B8D7E;
+    --rule: #C4C0B0;
+    --rule-strong: #1A1F1A;
+    --signal: #8B3D14;        /* Deep vermillion */
+    --counter: #1F5E45;       /* Deep bluish green */
+    --today: #64748B;         /* Soft slate, Asana-style */
+
+    /* Dark muted Okabe-Ito: same hue families for colorblind distinguishability, darker luminance for white-text contrast (WCAG AA+) */
+    --cart: #2C5266;          /* Dark teal-blue */
+    --plp: #7A5520;           /* Dark amber */
+    --experiments: #1F5E45;   /* Dark bluish green */
+    --implementations: #614258; /* Dark plum */
+    --compliance: #3D5F73;    /* Dark slate blue */
+    --promotions: #1F5D5D;    /* Dark teal */
+
+    --font: -apple-system, BlinkMacSystemFont, 'Helvetica Neue', Arial, sans-serif;
+  }
+
+  * { font-family: var(--font); }
+
+  body {
+    background: var(--ground);
+    color: var(--ink);
+    font-size: 14px;
+    line-height: 1.45;
+    -webkit-font-smoothing: antialiased;
+    padding: 32px 48px 56px;
+    margin: 0;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .page { max-width: 1720px; margin: 0 auto; }
+
+  .topbar {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 24px;
+    flex-wrap: wrap;
+    padding-bottom: 18px;
+    border-bottom: 1px solid var(--rule);
+    margin-bottom: 28px;
+  }
+  .eyebrow {
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--ink-mid);
+  }
+  .topbar-meta {
+    font-size: 11px;
+    color: var(--ink-mute);
+    letter-spacing: 0.04em;
+    font-weight: 500;
+  }
+  .topbar-actions {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+    margin-left: auto;
+  }
+  .toggle-btn {
+    background: transparent;
+    border: 1px solid var(--rule);
+    color: var(--ink-mid);
+    padding: 4px 10px;
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    cursor: pointer;
+    font-weight: 600;
+    border-radius: 2px;
+    font-family: var(--font);
+  }
+  .toggle-btn:hover {
+    background: var(--ground-elev);
+    color: var(--ink);
+  }
+
+  .title-block { margin-bottom: 40px; }
+  h1.title {
+    font-size: clamp(26px, 3.4vw, 34px);
+    line-height: 1.1;
+    letter-spacing: -0.024em;
+    font-weight: 500;
+    margin: 0 0 10px;
+    text-wrap: balance;
+  }
+  h1.title em {
+    color: var(--signal);
+    font-style: normal;
+    font-weight: 500;
+  }
+  .subtitle {
+    font-size: 14px;
+    color: var(--ink-mid);
+    max-width: 76ch;
+    margin: 0;
+    line-height: 1.5;
+  }
+
+  .gantt-wrap {
+    overflow-x: auto;
+    border-top: 1.5px solid var(--rule-strong);
+    border-bottom: 1.5px solid var(--rule-strong);
+    background: var(--ground);
+    margin-top: 12px;
+  }
+  .gantt {
+    --label-col: 280px;
+    min-width: 2200px;
+    width: 100%;
+    position: relative;
+    padding-top: 34px; /* headroom for the today flag — must stay inside .gantt-wrap's overflow clip */
+  }
+
+  .col-resizer {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: var(--label-col);
+    width: 9px;
+    margin-left: -4px;
+    cursor: col-resize;
+    z-index: 20;
+    background: transparent;
+    touch-action: none;
+  }
+  .col-resizer::after {
+    content: '';
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    width: 3px;
+    height: 36px;
+    background: var(--rule);
+    border-radius: 2px;
+    opacity: 0;
+    transition: opacity 0.15s, background 0.15s;
+  }
+  .col-resizer:hover::after,
+  .col-resizer.dragging::after {
+    opacity: 1;
+    background: var(--ink-mid);
+  }
+
+  /* TODAY LINE */
+  .today-line {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    width: 2px;
+    background: var(--today);
+    z-index: 10;
+    pointer-events: none;
+    display: none;
+    opacity: 1;
+  }
+  .today-flag {
+    position: absolute;
+    top: 2px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: var(--today);
+    color: white;
+    padding: 4px 9px 3px;
+    font-size: 10px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    white-space: nowrap;
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    font-weight: 600;
+    border-radius: 2px;
+  }
+  .today-flag::after {
+    content: '';
+    position: absolute;
+    bottom: -5px;
+    left: 50%;
+    transform: translateX(-50%);
+    border-left: 5px solid transparent;
+    border-right: 5px solid transparent;
+    border-top: 5px solid var(--today);
+  }
+  .today-flag-date {
+    font-weight: 700;
+    letter-spacing: 0.06em;
+  }
+
+  details.group { display: block; }
+  summary.row {
+    list-style: none;
+    cursor: pointer;
+  }
+  summary.row::-webkit-details-marker { display: none; }
+  summary.row::marker { display: none; }
+  summary.row:focus-visible {
+    outline: 2px solid var(--ink);
+    outline-offset: -2px;
+  }
+  details > summary .row-label::before {
+    content: '';
+    width: 0;
+    height: 0;
+    border-left: 4px solid transparent;
+    border-right: 4px solid transparent;
+    border-top: 5px solid var(--ink-mid);
+    margin-right: 10px;
+    flex-shrink: 0;
+    transition: transform 0.15s ease;
+    transform-origin: 50% 30%;
+  }
+  details:not([open]) > summary .row-label::before {
+    transform: rotate(-90deg);
+  }
+
+  .row {
+    display: grid;
+    grid-template-columns: var(--label-col, 280px) 1fr;
+  }
+  .row-label {
+    padding: 8px 16px;
+    font-size: 13px;
+    color: var(--ink);
+    border-right: 1px solid var(--rule);
+    border-bottom: 1px solid var(--rule);
+    background: var(--ground);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 2px;
+    line-height: 1.3;
+  }
+  .row-label .label-top {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    width: 100%;
+    min-width: 0;
+  }
+  .row-label .label-top > a,
+  .row-label .label-top > span:not(.id) {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    min-width: 0;
+  }
+  .row-label .row-meta {
+    font-size: 10.5px;
+    color: var(--ink-mute);
+    font-style: italic;
+    font-weight: 500;
+    line-height: 1.3;
+    letter-spacing: 0.01em;
+  }
+  .row-label.indented { padding-left: 32px; }
+  .row-label.sub-indented { padding-left: 48px; font-size: 12px; color: var(--ink-mid); }
+  .row-label.sub-indented .label-top::before {
+    content: '↳';
+    color: var(--ink-mute);
+    margin-right: 4px;
+  }
+
+  /* Link styling for clickable row labels */
+  .row-label a {
+    color: inherit;
+    text-decoration: none;
+  }
+  .row-label a:hover {
+    text-decoration: underline;
+    text-decoration-thickness: 1px;
+    text-decoration-color: var(--ink-mute);
+    text-underline-offset: 3px;
+  }
+  .row-label a:focus-visible {
+    outline: 1.5px solid var(--ink);
+    outline-offset: 2px;
+    border-radius: 1px;
+  }
+
+  .row-label .id,
+  .row-label a.id {
+    font-size: 11px;
+    color: var(--ink-mute);
+    white-space: nowrap;
+    font-weight: 500;
+    letter-spacing: 0.02em;
+    margin-left: auto;
+  }
+  .row-label a.id:hover {
+    color: var(--ink);
+  }
+
+  .row-track {
+    display: grid;
+    grid-template-columns: repeat(24, 1fr);
+    border-bottom: 1px solid var(--rule);
+    background: var(--ground);
+    position: relative;
+    min-height: 48px;
+  }
+  .cell {
+    border-right: 1px solid var(--rule);
+    grid-row: 1;
+  }
+  .cell:last-child { border-right: none; }
+  .cell.prior { background: rgba(74, 80, 75, 0.11); }
+
+  /* Reset to single-row flex for special header rows */
+  .sprint-row .row-label,
+  .week-row .row-label,
+  .milestone-row .row-label,
+  .group-row .row-label {
+    flex-direction: row;
+    align-items: center;
+    gap: 6px;
+  }
+
+  /* SPRINT BAND ROW */
+  .sprint-row .row-label {
+    background: var(--ground-elev);
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: var(--ink-mid);
+    font-weight: 600;
+  }
+  .sprint-row .row-track {
+    background: var(--ground-elev);
+    min-height: 42px;
+  }
+  .sprint-band {
+    grid-row: 1;
+    align-self: stretch;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    align-items: center;
+    justify-content: center;
+    padding: 5px 4px;
+    text-align: center;
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    line-height: 1.2;
+    color: var(--ink-mid);
+    border-right: 1px solid var(--rule);
+    font-weight: 600;
+  }
+  .sprint-dates {
+    font-size: 9px;
+    font-weight: 500;
+    letter-spacing: 0.05em;
+    opacity: 0.85;
+    white-space: nowrap;
+  }
+  .sprint-band.prior {
+    background: rgba(74, 80, 75, 0.16);
+    color: var(--ink-mid);
+  }
+  .sprint-band.tint { background: rgba(74, 80, 75, 0.08); }
+  .sprint-band.tint-alt { background: rgba(74, 80, 75, 0.14); }
+  .sprint-band.renewal-band {
+    background: rgba(122, 41, 36, 0.12);
+    color: var(--signal);
+    font-weight: 700;
+    border-right: none;
+  }
+
+  /* WEEK LABEL ROW */
+  .week-row .row-label {
+    background: var(--ground);
+    border-bottom: 1.5px solid var(--ink);
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--ink-mid);
+    font-weight: 600;
+  }
+  .week-row .row-track {
+    background: var(--ground);
+    border-bottom: 1.5px solid var(--ink);
+    min-height: 32px;
+  }
+  .week-label {
+    grid-row: 1;
+    font-size: 10px;
+    color: var(--ink-mid);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-right: 1px solid var(--rule);
+    letter-spacing: 0.04em;
+    font-weight: 500;
+  }
+  .week-label.prior {
+    color: var(--ink-mid);
+    background: rgba(74, 80, 75, 0.11);
+  }
+  .week-label:last-child { border-right: none; }
+
+  /* MILESTONE ROW */
+  .milestone-row .row-label {
+    background: var(--ground);
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: var(--ink-mid);
+    font-weight: 600;
+  }
+  .milestone-row .row-track {
+    min-height: 52px;
+    align-items: center;
+  }
+  .milestone {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+    padding: 6px 4px;
+  }
+  .diamond {
+    width: 10px;
+    height: 10px;
+    background: var(--ink);
+    transform: rotate(45deg);
+    flex-shrink: 0;
+  }
+  .diamond.release { background: var(--counter); }
+  .diamond.release.projected {
+    background: var(--ground);
+    border: 1.5px solid var(--counter);
+  }
+  .diamond.holiday { background: var(--ink-mute); }
+  .diamond.renewal {
+    background: var(--signal);
+    width: 14px;
+    height: 14px;
+  }
+  .milestone-label {
+    font-size: 9px;
+    color: var(--ink-mid);
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    white-space: normal;
+    text-align: center;
+    line-height: 1.2;
+    font-weight: 500;
+  }
+  .milestone.projected .milestone-label {
+    color: var(--ink-mute);
+    font-style: italic;
+  }
+  .milestone.renewal .milestone-label {
+    color: var(--signal);
+    font-weight: 700;
+    font-size: 10px;
+    letter-spacing: 0.08em;
+  }
+
+  /* GROUP HEADER ROW */
+  .group-row .row-label {
+    background: var(--ground-elev);
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: var(--ink);
+    font-weight: 700;
+    padding: 14px 16px 12px;
+  }
+  .group-row .row-track {
+    background: var(--ground-elev);
+    min-height: 44px;
+  }
+  .group-row .row-track,
+  .group-row .row-label {
+    border-bottom: 1px solid var(--rule);
+  }
+  .group-id,
+  a.group-id {
+    font-size: 10px;
+    color: var(--ink-mute);
+    text-transform: none;
+    letter-spacing: 0.02em;
+    font-weight: 500;
+    margin-left: 6px;
+  }
+  a.group-id:hover { color: var(--ink); }
+  .group-id.muted { color: var(--ink-mute); font-style: italic; }
+
+  /* BARS */
+  .bar {
+    grid-row: 1;
+    align-self: center;
+    margin: 6px 4px;
+    height: 24px;
+    padding: 0 10px 0 6px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 11.5px;
+    color: white;
+    line-height: 1;
+    letter-spacing: 0.01em;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    border-radius: 2px;
+    min-width: 0;
+    font-weight: 500;
+    position: relative;
+  }
+  .bar-label {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    min-width: 0;
+    flex: 1;
+  }
+  .bar.cart { background-color: var(--cart); }
+  .bar.plp { background-color: var(--plp); }
+  .bar.experiments { background-color: var(--experiments); }
+  .bar.implementations { background-color: var(--implementations); }
+  .bar.compliance { background-color: var(--compliance); }
+  .bar.promotions { background-color: var(--promotions); }
+  .bar.proposed {
+    background-color: var(--ground);
+    color: var(--signal);
+    border: 1.5px dashed var(--signal);
+    background-image: repeating-linear-gradient(
+      45deg,
+      transparent 0,
+      transparent 6px,
+      rgba(122, 41, 36, 0.08) 6px,
+      rgba(122, 41, 36, 0.08) 8px
+    );
+    font-weight: 600;
+  }
+  .bar.deferred {
+    background-color: transparent;
+    color: var(--ink-mute);
+    border: 1px dashed var(--ink-mute);
+    font-weight: 500;
+    text-decoration: line-through;
+    text-decoration-thickness: 1px;
+    text-decoration-color: var(--ink-mute);
+    opacity: 0.75;
+  }
+  .bar.done {
+    background-color: var(--ink-mute);
+    opacity: 0.7;
+  }
+  .bar.epic {
+    min-height: 30px;
+    font-weight: 700;
+    font-size: 12px;
+  }
+  .bar.crosses {
+    background-image: linear-gradient(
+      to right,
+      rgba(0,0,0,0.32) 0%,
+      rgba(0,0,0,0.32) var(--past, 50%),
+      transparent var(--past, 50%),
+      transparent 100%
+    );
+  }
+  .bar.proposed.crosses {
+    background-image:
+      linear-gradient(
+        to right,
+        rgba(122, 41, 36, 0.18) 0%,
+        rgba(122, 41, 36, 0.18) var(--past, 50%),
+        transparent var(--past, 50%),
+        transparent 100%
+      ),
+      repeating-linear-gradient(
+        45deg,
+        transparent 0,
+        transparent 6px,
+        rgba(122, 41, 36, 0.08) 6px,
+        rgba(122, 41, 36, 0.08) 8px
+      );
+  }
+  .bar-status {
+    font-size: 9px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    opacity: 0.85;
+    margin-left: auto;
+    padding-left: 6px;
+    font-weight: 500;
+    white-space: nowrap;
+  }
+
+  /* TASK-TYPE PILL */
+  .bar-type {
+    font-size: 8.5px;
+    letter-spacing: 0.1em;
+    font-weight: 700;
+    padding: 2.5px 5px;
+    background: rgba(255, 255, 255, 0.24);
+    color: white;
+    border-radius: 2px;
+    flex-shrink: 0;
+    text-transform: uppercase;
+    line-height: 1;
+  }
+  .bar.proposed .bar-type {
+    background: rgba(122, 41, 36, 0.16);
+    color: var(--signal);
+  }
+  .bar.deferred .bar-type {
+    background: transparent;
+    color: var(--ink-mute);
+    border: 1px solid var(--ink-mute);
+    padding: 1.5px 4px;
+  }
+  .bar.done .bar-type {
+    background: rgba(255, 255, 255, 0.32);
+    color: white;
+  }
+  .bar.epic .bar-type {
+    background: rgba(255, 255, 255, 0.3);
+    font-size: 9px;
+  }
+
+  /* LEGEND */
+  .legend-note {
+    margin-top: 28px;
+    margin-bottom: 12px;
+    font-size: 11px;
+    color: var(--ink-mute);
+    line-height: 1.5;
+    max-width: 760px;
+  }
+  .legend {
+    margin-top: 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px 28px;
+    align-items: center;
+    font-size: 12px;
+    color: var(--ink-mid);
+    font-weight: 500;
+  }
+  .legend-group {
+    display: flex;
+    align-items: center;
+    gap: 18px;
+    padding-right: 18px;
+  }
+  .legend-group:not(:last-child) {
+    border-right: 1px solid var(--rule);
+  }
+  .legend-item { display: flex; align-items: center; gap: 8px; }
+  .swatch {
+    width: 18px;
+    height: 12px;
+    border-radius: 2px;
+    flex-shrink: 0;
+  }
+  .swatch.cart { background-color: var(--cart); }
+  .swatch.plp { background-color: var(--plp); }
+  .swatch.experiments { background-color: var(--experiments); }
+  .swatch.implementations { background-color: var(--implementations); }
+  .swatch.compliance { background-color: var(--compliance); }
+  .swatch.promotions { background-color: var(--promotions); }
+  .swatch.proposed {
+    background-color: var(--ground);
+    border: 1.5px dashed var(--signal);
+    background-image: repeating-linear-gradient(
+      45deg,
+      transparent 0,
+      transparent 4px,
+      rgba(122, 41, 36, 0.1) 4px,
+      rgba(122, 41, 36, 0.1) 6px
+    );
+  }
+  .swatch.deferred {
+    background-color: transparent;
+    border: 1px dashed var(--ink-mute);
+  }
+  .swatch.done { background: var(--ink-mute); opacity: 0.7; }
+  .swatch.crosses {
+    background-image: linear-gradient(
+      to right,
+      rgba(0,0,0,0.45) 0 50%,
+      transparent 50% 100%
+    ), linear-gradient(var(--ink-mid), var(--ink-mid));
+  }
+  .legend-diamond {
+    width: 10px;
+    height: 10px;
+    transform: rotate(45deg);
+    flex-shrink: 0;
+  }
+  .legend-diamond.release { background: var(--counter); }
+  .legend-diamond.projected {
+    background: var(--ground);
+    border: 1.5px solid var(--counter);
+  }
+  .legend-diamond.holiday { background: var(--ink-mute); }
+  .legend-diamond.renewal { background: var(--signal); width: 12px; height: 12px; }
+  .legend-today {
+    width: 2px;
+    height: 14px;
+    background: var(--today);
+    opacity: 1;
+    flex-shrink: 0;
+  }
+  .legend-pill {
+    font-size: 8.5px;
+    letter-spacing: 0.1em;
+    font-weight: 700;
+    padding: 2.5px 5px;
+    background: var(--ink-mid);
+    color: white;
+    border-radius: 2px;
+    text-transform: uppercase;
+    line-height: 1;
+    flex-shrink: 0;
+  }
+
+  footer {
+    margin-top: 56px;
+    padding-top: 24px;
+    border-top: 1px solid var(--rule);
+    font-size: 11px;
+    color: var(--ink-mute);
+    letter-spacing: 0.04em;
+    font-weight: 500;
+  }
+
+  @media (max-width: 768px) {
+    body { padding: 16px 12px 40px; font-size: 13px; }
+    .topbar {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 8px;
+      padding-bottom: 12px;
+      margin-bottom: 18px;
+    }
+    .topbar-actions { margin-left: 0; }
+    .topbar-meta { order: 3; }
+    .title-block { margin-bottom: 24px; }
+    h1.title { font-size: 22px; letter-spacing: -0.02em; margin-bottom: 6px; }
+    .subtitle { font-size: 12px; line-height: 1.4; }
+    .gantt-wrap { margin-top: 24px; }
+    .gantt { --label-col: 160px; min-width: 1700px; }
+    .row-label { padding: 6px 8px; font-size: 11px; }
+    .row-label.indented { padding-left: 18px; }
+    .row-label.sub-indented { padding-left: 28px; font-size: 11px; }
+    .row-label .row-meta { display: none; }
+    .row-label .label-top { gap: 6px; }
+    .row-label .id, .row-label a.id { font-size: 9px; padding: 1px 4px; }
+    .bar { font-size: 10px; min-height: 22px; }
+    .bar-type { font-size: 8px; padding: 1px 4px; }
+    .bar-label { font-size: 10px; }
+    .sprint-band { font-size: 9px; padding: 4px 6px; }
+    .col-resizer { width: 14px; margin-left: -7px; }
+    .col-resizer::after { opacity: 1; background: var(--rule); height: 24px; }
+    .legend { flex-direction: column; gap: 8px; padding: 16px 12px; }
+    .legend-group { border-right: none !important; padding-right: 0; padding-bottom: 8px; border-bottom: 1px solid var(--rule); }
+    .legend-group:last-child { border-bottom: none; padding-bottom: 0; }
+    .today-flag { font-size: 9px; padding: 3px 6px 2px; top: 2px; }
+    footer { font-size: 10px; margin-top: 32px; padding-top: 16px; }
+  }
+
+
+  /* Row labels stay pinned while the timeline scrolls horizontally */
+  .row-label {
+    position: sticky;
+    left: 0;
+    z-index: 5;
+  }
+
+  /* Client-action bars: work blocked on a client decision/approval */
+  .bar.client-action { box-shadow: inset 0 0 0 2px var(--signal); }
+  .bar.client-action .bar-type { background: var(--signal); color: #fff; }
+  .swatch.client-action-swatch { background: transparent; box-shadow: inset 0 0 0 2px var(--signal); }
+
+  /* Pin filler cells to their columns: auto-placed cells skip explicitly
+     placed bars, displacing the grid lines in every row that has a bar.
+     Explicit-vs-explicit placement may overlap, so bars sit on top. */
+  .row-track .cell:nth-child(1) { grid-column: 1; }
+  .row-track .cell:nth-child(2) { grid-column: 2; }
+  .row-track .cell:nth-child(3) { grid-column: 3; }
+  .row-track .cell:nth-child(4) { grid-column: 4; }
+  .row-track .cell:nth-child(5) { grid-column: 5; }
+  .row-track .cell:nth-child(6) { grid-column: 6; }
+  .row-track .cell:nth-child(7) { grid-column: 7; }
+  .row-track .cell:nth-child(8) { grid-column: 8; }
+  .row-track .cell:nth-child(9) { grid-column: 9; }
+  .row-track .cell:nth-child(10) { grid-column: 10; }
+  .row-track .cell:nth-child(11) { grid-column: 11; }
+  .row-track .cell:nth-child(12) { grid-column: 12; }
+  .row-track .cell:nth-child(13) { grid-column: 13; }
+  .row-track .cell:nth-child(14) { grid-column: 14; }
+  .row-track .cell:nth-child(15) { grid-column: 15; }
+  .row-track .cell:nth-child(16) { grid-column: 16; }
+  .row-track .cell:nth-child(17) { grid-column: 17; }
+  .row-track .cell:nth-child(18) { grid-column: 18; }
+  .row-track .cell:nth-child(19) { grid-column: 19; }
+  .row-track .cell:nth-child(20) { grid-column: 20; }
+  .row-track .cell:nth-child(21) { grid-column: 21; }
+  .row-track .cell:nth-child(22) { grid-column: 22; }
+  .row-track .cell:nth-child(23) { grid-column: 23; }
+  .row-track .cell:nth-child(24) { grid-column: 24; }
+  .row-track .cell:nth-child(25) { grid-column: 25; }
+  .row-track .cell:nth-child(26) { grid-column: 26; }
+  .row-track .cell:nth-child(27) { grid-column: 27; }
+  .row-track .cell:nth-child(28) { grid-column: 28; }
+  .row-track .cell:nth-child(29) { grid-column: 29; }
+  .row-track .cell:nth-child(30) { grid-column: 30; }
+  .row-track .cell:nth-child(31) { grid-column: 31; }
+  .row-track .cell:nth-child(32) { grid-column: 32; }
+  .row-track .cell:nth-child(33) { grid-column: 33; }
+  .row-track .cell:nth-child(34) { grid-column: 34; }
+  .row-track .cell:nth-child(35) { grid-column: 35; }
+  .row-track .cell:nth-child(36) { grid-column: 36; }
+  .row-track .cell:nth-child(37) { grid-column: 37; }
+  .row-track .cell:nth-child(38) { grid-column: 38; }
+  .row-track .cell:nth-child(39) { grid-column: 39; }
+  .row-track .cell:nth-child(40) { grid-column: 40; }
+
+  /* ===== OWNERSHIP ENCODING (MA extension, v0.2) ===== */
+  .bar-owner { font-size: 9.5px; letter-spacing: 0.07em; text-transform: uppercase;
+    font-weight: 700; padding-left: 8px; opacity: 0.95; white-space: nowrap; flex-shrink: 0; }
+  /* Client-owned (Market America): diagonal hatch over the lane color — high contrast for projector distance */
+  .bar.own-client { background-image: repeating-linear-gradient(45deg,
+      rgba(255,255,255,0.38) 0, rgba(255,255,255,0.38) 5px, transparent 5px, transparent 11px); }
+  /* Joint: left --own% solid (Anatta), remainder hatched (client), divider at the boundary */
+  .bar.own-joint { background-repeat: no-repeat; background-position: right center;
+    background-size: calc(100% - var(--own, 50%)) 100%;
+    background-image: repeating-linear-gradient(45deg,
+      rgba(255,255,255,0.38) 0, rgba(255,255,255,0.38) 5px, transparent 5px, transparent 11px); }
+  .bar.own-joint::before { content: ''; position: absolute; top: 0; bottom: 0;
+    left: var(--own, 50%); width: 2px; background: rgba(255,255,255,0.85); z-index: 1; }
+  /* Blocked awaiting a client/partner decision or dependency: signal-red inner outline + filled pill.
+     Reserved for genuine gates only — ownership alone is carried by the hatch. */
+  .bar.client-action { box-shadow: inset 0 0 0 1.5px var(--signal); }
+  .bar.client-action .bar-type { background: var(--signal); color: #fff; }
+  /* ownership legend swatches */
+  .swatch.own-anatta { background: var(--cart); }
+  .swatch.own-client { background: var(--cart); background-image: repeating-linear-gradient(45deg,
+      rgba(255,255,255,0.55) 0, rgba(255,255,255,0.55) 3px, transparent 3px, transparent 6px); }
+  .swatch.own-joint { background: var(--cart); background-repeat:no-repeat; background-position:right;
+      background-size:50% 100%; background-image: repeating-linear-gradient(45deg,
+      rgba(255,255,255,0.55) 0, rgba(255,255,255,0.55) 3px, transparent 3px, transparent 6px); }
+  .swatch.client-action { background: var(--ground); box-shadow: inset 0 0 0 1.5px var(--signal); }
+  .bar.kc { background-color: #4E4A7A; }      .swatch.kc { background-color: #4E4A7A; }
+  .bar.content { background-color: #6B4A2A; } .swatch.content { background-color: #6B4A2A; }
+  .bar.plat { background-color: #3F5A34; }    .swatch.plat { background-color: #3F5A34; }
+  .bar.qa { background-color: #6B3A4A; }       .swatch.qa { background-color: #6B3A4A; }
+</style>
+<body>
+<div class="page">
+  <div class="topbar">
+    <div class="eyebrow">Anatta · HUMANN</div>
+    <div class="topbar-actions">
+      <button class="toggle-btn" id="expandAll">Expand all</button>
+      <button class="toggle-btn" id="collapseAll">Collapse all</button>
+    </div>
+    <div class="topbar-meta">DRAFT v0.1 · Mar – Sep 2026 · Go-live 8/17</div>
+  </div>
+  <div class="title-block">
+    <h1 class="title">HUMANN — <em>Shopify Horizon Redesign</em> Roadmap</h1>
+    <p class="subtitle">The full engagement from kickoff to launch: what has shipped, what is in build at the today line, and the path through code freeze (Jul 31), E2E testing, and the Aug 17 go-live into post-launch.</p>
+  </div>
+  <div class="gantt-wrap">
+    <div class="gantt">
+      <div class="today-line" id="todayLine">
+        <div class="today-flag"><span>Today</span><span class="today-flag-date" id="todayDate"></span></div>
+      </div>
+      <div class="col-resizer" id="colResizer" title="Drag to resize label column"></div>
+      <div class="row sprint-row"><div class="row-label">Sprint</div><div class="row-track"><div class="sprint-band prior" style="grid-column: 1 / 7;">Kickoff &amp; Design<span class="sprint-dates">Mar 30 – May 8</span></div><div class="sprint-band prior" style="grid-column: 7 / 9;">Sprint 1<span class="sprint-dates">May 11 – 22</span></div><div class="sprint-band prior" style="grid-column: 9 / 11;">Sprint 2<span class="sprint-dates">May 25 – Jun 5</span></div><div class="sprint-band prior" style="grid-column: 11 / 13;">Sprint 3<span class="sprint-dates">Jun 8 – 19</span></div><div class="sprint-band prior" style="grid-column: 13 / 15;">Sprint 4<span class="sprint-dates">Jun 22 – Jul 3</span></div><div class="sprint-band prior" style="grid-column: 15 / 17;">Sprint 5<span class="sprint-dates">Jul 6 – 17</span></div><div class="sprint-band tint" style="grid-column: 17 / 19;">Sprint 6<span class="sprint-dates">Jul 20 – 31</span></div><div class="sprint-band tint-alt" style="grid-column: 19 / 21;">E2E &amp; QA<span class="sprint-dates">Aug 3 – 14</span></div><div class="sprint-band renewal-band" style="grid-column: 21 / 22;">Launch<span class="sprint-dates">Aug 17</span></div><div class="sprint-band tint-alt" style="grid-column: 22 / 25;">Post-Launch<span class="sprint-dates">Aug 17 – Sep 2</span></div></div></div>
+      <div class="row week-row"><div class="row-label">Week of</div><div class="row-track"><div class="week-label prior">Mar 30</div><div class="week-label prior">Apr 6</div><div class="week-label prior">Apr 13</div><div class="week-label prior">Apr 20</div><div class="week-label prior">Apr 27</div><div class="week-label prior">May 4</div><div class="week-label prior">May 11</div><div class="week-label prior">May 18</div><div class="week-label prior">May 25</div><div class="week-label prior">Jun 1</div><div class="week-label prior">Jun 8</div><div class="week-label prior">Jun 15</div><div class="week-label prior">Jun 22</div><div class="week-label prior">Jun 29</div><div class="week-label prior">Jul 6</div><div class="week-label prior">Jul 13</div><div class="week-label">Jul 20</div><div class="week-label">Jul 27</div><div class="week-label">Aug 3</div><div class="week-label">Aug 10</div><div class="week-label">Aug 17</div><div class="week-label">Aug 24</div><div class="week-label">Aug 31</div><div class="week-label">Sep 7</div></div></div>
+      <div class="row milestone-row"><div class="row-label">Milestones</div><div class="row-track"><div class="cell prior"></div><div class="cell prior"></div><div class="cell prior"></div><div class="cell prior"></div><div class="cell prior"></div><div class="cell prior"></div><div class="cell prior"></div><div class="cell prior"></div><div class="cell prior"></div><div class="cell prior"></div><div class="cell prior"></div><div class="cell prior"></div><div class="cell prior"></div><div class="cell prior"></div><div class="cell prior"></div><div class="cell prior"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="milestone" style="grid-column: 7 / 8;"><div class="diamond release"></div><div class="milestone-label">Dev kickoff · May 11</div></div><div class="milestone" style="grid-column: 12 / 13;"><div class="diamond release"></div><div class="milestone-label">Final design approval · Jun 15</div></div><div class="milestone projected" style="grid-column: 18 / 19;"><div class="diamond release projected"></div><div class="milestone-label">Code freeze · Jul 31</div></div><div class="milestone projected" style="grid-column: 19 / 20;"><div class="diamond release projected"></div><div class="milestone-label">E2E testing begins · Aug 3</div></div><div class="milestone renewal" style="grid-column: 21 / 22;"><div class="diamond renewal"></div><div class="milestone-label">GO-LIVE · Aug 17</div></div><div class="milestone projected" style="grid-column: 23 / 24;"><div class="diamond release projected"></div><div class="milestone-label">Post-launch ends · Sep 2</div></div></div></div>
+<details class="group" open><summary class="row group-row"><div class="row-label">Homepage <a class="group-id" href="https://anatta-io.atlassian.net/browse/HUM-295" target="_blank" rel="noopener">HUM-295</a></div><div class="row-track"><div class="cell prior"></div><div class="cell prior"></div><div class="cell prior"></div><div class="cell prior"></div><div class="cell prior"></div><div class="cell prior"></div><div class="cell prior"></div><div class="cell prior"></div><div class="cell prior"></div><div class="cell prior"></div><div class="cell prior"></div><div class="cell prior"></div><div class="cell prior"></div><div class="cell prior"></div><div class="cell prior"></div><div class="cell prior"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="bar cart epic" style="grid-column: 3 / 19;"><span class="bar-type">IMPL</span>Homepage <span class="bar-status">In build → VQA</span></div></div></summary><div class="row"><div class="row-label indented"><span class="label-top"><a href="https://anatta-io.atlassian.net/browse/HUM-326" target="_blank" rel="noopener">Homepage design</a><a class="id" href="https://anatta-io.atlassian.net/browse/HUM-326" target="_blank" rel="noopener">HUM-326</a></span><span class="row-meta">Shipped</span></div><div class="row-track"><div class="cell prior"></div><div class="cell prior"></div><div class="cell prior"></div><div class="cell prior"></div><div class="cell prior"></div><div class="cell prior"></div><div class="cell prior"></div><div class="cell prior"></div><div class="cell prior"></div><div class="cell prior"></div><div class="cell prior"></div><div class="cell prior"></div><div class="cell prior"></div><div class="cell prior"></div><div class="cell prior"></div><div class="cell prior"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="bar cart done" style="grid-column: 3 / 7;" title="Homepage design — approved and handed to development"><span class="bar-type">IMPL</span><span class="bar-label">Design shipped</span></div></div></div><div class="row"><div class="row-label indented"><span class="label-top"><a href="https://anatta-io.atlassian.net/browse/HUM-295" target="_blank" rel="noopener">Homepage build</a><a class="id" href="https://anatta-io.atlassian.net/browse/HUM-295" target="_blank" rel="noopener">HUM-295</a></span><span class="row-meta">In build · visual QA resolving</span></div><div class="row-track"><div class="cell prior"></div><div class="cell prior"></div><div class="cell prior"></div><div class="cell prior"></div><div class="cell prior"></div><div class="cell prior"></div><div class="cell prior"></div><div class="cell prior"></div><div class="cell prior"></div><div class="cell prior"></div><div class="cell prior"></div><div class="cell prior"></div><div class="cell prior"></div><div class="cell prior"></div><div class="cell prior"></div><div class="cell prior"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="bar cart crosses" style="grid-column: 6 / 19; --past: 88%;" title="Homepage development; visual-QA batch resolving ahead of code freeze"><span class="bar-type">IMPL</span><span class="bar-label">Build · VQA</span></div></div></div></details><details class="group" open><summary class="row group-row"><div class="row-label">Header, Footer &amp; Global <a class="group-id" href="https://anatta-io.atlassian.net/browse/HUM-296" target="_blank" rel="noopener">HUM-296</a></div><div class="row-track"><div class="cell prior"></div><div class="cell prior"></div><div class="cell prior"></div><div class="cell prior"></div><div class="cell prior"></div><div class="cell prior"></div><div class="cell prior"></div><div class="cell prior"></div><div class="cell prior"></div><div class="cell prior"></div><div class="cell prior"></div><div class="cell prior"></div><div class="cell prior"></div><div class="cell prior"></div><div class="cell prior"></div><div class="cell prior"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="bar plp epic" style="grid-column: 5 / 19;"><span class="bar-type">IMPL</span>Navigation &amp; global elements <span class="bar-status">In build → QA</span></div></div></summary><div class="row"><div class="row-label indented"><span class="label-top"><a href="https://anatta-io.atlassian.net/browse/HUM-328" target="_blank" rel="noopener">Header &amp; Footer design</a><a class="id" href="https://anatta-io.atlassian.net/browse/HUM-328" target="_blank" rel="noopener">HUM-328</a></span><span class="row-meta">Shipped</span></div><div class="row-track"><div class="cell prior"></div><div class="cell prior"></div><div class="cell prior"></div><div class="cell prior"></div><div class="cell prior"></div><div class="cell prior"></div><div class="cell prior"></div><div class="cell prior"></div><div class="cell prior"></div><div class="cell prior"></div><div class="cell prior"></div><div class="cell prior"></div><div class="cell prior"></div><div class="cell prior"></div><div class="cell prior"></div><div class="cell prior"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="bar plp done" style="grid-column: 5 / 8;" title="Header, footer and navigation design — approved"><span class="bar-type">IMPL</span><span class="bar-label">Design shipped</span></div></div></div><div class="row"><div class="row-label indented"><span class="label-top"><a href="https://anatta-io.atlassian.net/browse/HUM-296" target="_blank" rel="noopener">Header &amp; Footer build</a><a class="id" href="https://anatta-io.atlassian.net/browse/HUM-296" target="_blank" rel="noopener">HUM-296</a></span><span class="row-meta">Dev done · in QA</span></div><div class="row-track"><div class="cell prior"></div><div class="cell prior"></div><div class="cell prior"></div><div class="cell prior"></div><div class="cell prior"></div><div class="cell prior"></div><div class="cell prior"></div><div class="cell prior"></div><div class="cell prior"></div><div class="cell prior"></div><div class="cell prior"></div><div class="cell prior"></div><div class="cell prior"></div><div class="cell prior"></div><div class="cell prior"></div><div class="cell prior"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="bar plp crosses" style="grid-column: 8 / 19; --past: 86%;" title="Header / footer / navigation build; in QA ahead of code freeze"><span class="bar-type">IMPL</span><span class="bar-label">Build · QA</span></div></div></div><div class="row"><div class="row-label indented"><span class="label-top"><a href="https://anatta-io.atlassian.net/browse/HUM-641" target="_blank" rel="noopener">Global elements (hover / load animations)</a><a class="id" href="https://anatta-io.atlassian.net/browse/HUM-641" target="_blank" rel="noopener">HUM-641</a></span><span class="row-meta">In build</span></div><div class="row-track"><div class="cell prior"></div><div class="cell prior"></div><div class="cell prior"></div><div class="cell prior"></div><div class="cell prior"></div><div class="cell prior"></div><div class="cell prior"></div><div class="cell prior"></div><div class="cell prior"></div><div class="cell prior"></div><div class="cell prior"></div><div class="cell prior"></div><div class="cell prior"></div><div class="cell prior"></div><div class="cell prior"></div><div class="cell prior"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="bar plp crosses" style="grid-column: 10 / 19; --past: 83%;" title="Global components, hover and load-animation specs across templates"><span class="bar-type">IMPL</span><span class="bar-label">In build</span></div></div></div></details><details class="group" open><summary class="row group-row"><div class="row-label">PLP / Collection <a class="group-id" href="https://anatta-io.atlassian.net/browse/HUM-293" target="_blank" rel="noopener">HUM-293</a></div><div class="row-track"><div class="cell prior"></div><div class="cell prior"></div><div class="cell prior"></div><div class="cell prior"></div><div class="cell prior"></div><div class="cell prior"></div><div class="cell prior"></div><div class="cell prior"></div><div class="cell prior"></div><div class="cell prior"></div><div class="cell prior"></div><div class="cell prior"></div><div class="cell prior"></div><div class="cell prior"></div><div class="cell prior"></div><div class="cell prior"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="bar experiments epic" style="grid-column: 6 / 19;"><span class="bar-type">IMPL</span>Product listing pages <span class="bar-status">In build → QA</span></div></div></summary><div class="row"><div class="row-label indented"><span class="label-top"><a href="https://anatta-io.atlassian.net/browse/HUM-325" target="_blank" rel="noopener">PLP design</a><a class="id" href="https://anatta-io.atlassian.net/browse/HUM-325" target="_blank" rel="noopener">HUM-325</a></span><span class="row-meta">Shipped</span></div><div class="row-track"><div class="cell prior"></div><div class="cell prior"></div><div class="cell prior"></div><div class="cell prior"></div><div class="cell prior"></div><div class="cell prior"></div><div class="cell prior"></div><div class="cell prior"></div><div class="cell prior"></div><div class="cell prior"></div><div class="cell prior"></div><div class="cell prior"></div><div class="cell prior"></div><div class="cell prior"></div><div class="cell prior"></div><div class="cell prior"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="bar experiments done" style="grid-column: 6 / 10;" title="PLP / collection design — approved"><span class="bar-type">IMPL</span><span class="bar-label">Design shipped</span></div></div></div><div class="row"><div class="row-label indented"><span class="label-top"><a href="https://anatta-io.atlassian.net/browse/HUM-293" target="_blank" rel="noopener">PLP build</a><a class="id" href="https://anatta-io.atlassian.net/browse/HUM-293" target="_blank" rel="noopener">HUM-293</a></span><span class="row-meta">In build</span></div><div class="row-track"><div class="cell prior"></div><div class="cell prior"></div><div class="cell prior"></div><div class="cell prior"></div><div class="cell prior"></div><div class="cell prior"></div><div class="cell prior"></div><div class="cell prior"></div><div class="cell prior"></div><div class="cell prior"></div><div class="cell prior"></div><div class="cell prior"></div><div class="cell prior"></div><div class="cell prior"></div><div class="cell prior"></div><div class="cell prior"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="bar experiments crosses" style="grid-column: 10 / 19; --past: 83%;" title="PLP / collection development and QA"><span class="bar-type">IMPL</span><span class="bar-label">Build · QA</span></div></div></div></details><details class="group" open><summary class="row group-row"><div class="row-label">PDP &amp; Bundle <a class="group-id" href="https://anatta-io.atlassian.net/browse/HUM-294" target="_blank" rel="noopener">HUM-294</a></div><div class="row-track"><div class="cell prior"></div><div class="cell prior"></div><div class="cell prior"></div><div class="cell prior"></div><div class="cell prior"></div><div class="cell prior"></div><div class="cell prior"></div><div class="cell prior"></div><div class="cell prior"></div><div class="cell prior"></div><div class="cell prior"></div><div class="cell prior"></div><div class="cell prior"></div><div class="cell prior"></div><div class="cell prior"></div><div class="cell prior"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="bar implementations epic" style="grid-column: 6 / 19;"><span class="bar-type">IMPL</span>Product detail &amp; bundle <span class="bar-status">In build → QA</span></div></div></summary><div class="row"><div class="row-label indented"><span class="label-top"><a href="https://anatta-io.atlassian.net/browse/HUM-324" target="_blank" rel="noopener">PDP design</a><a class="id" href="https://anatta-io.atlassian.net/browse/HUM-324" target="_blank" rel="noopener">HUM-324</a></span><span class="row-meta">Finalizing</span></div><div class="row-track"><div class="cell prior"></div><div class="cell prior"></div><div class="cell prior"></div><div class="cell prior"></div><div class="cell prior"></div><div class="cell prior"></div><div class="cell prior"></div><div class="cell prior"></div><div class="cell prior"></div><div class="cell prior"></div><div class="cell prior"></div><div class="cell prior"></div><div class="cell prior"></div><div class="cell prior"></div><div class="cell prior"></div><div class="cell prior"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="bar implementations" style="grid-column: 6 / 13;" title="PDP design — finalizing remaining sections"><span class="bar-type">IMPL</span><span class="bar-label">Design</span></div></div></div><div class="row"><div class="row-label indented"><span class="label-top"><a href="https://anatta-io.atlassian.net/browse/HUM-294" target="_blank" rel="noopener">PDP build</a><a class="id" href="https://anatta-io.atlassian.net/browse/HUM-294" target="_blank" rel="noopener">HUM-294</a></span><span class="row-meta">In build · QA batches</span></div><div class="row-track"><div class="cell prior"></div><div class="cell prior"></div><div class="cell prior"></div><div class="cell prior"></div><div class="cell prior"></div><div class="cell prior"></div><div class="cell prior"></div><div class="cell prior"></div><div class="cell prior"></div><div class="cell prior"></div><div class="cell prior"></div><div class="cell prior"></div><div class="cell prior"></div><div class="cell prior"></div><div class="cell prior"></div><div class="cell prior"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="bar implementations crosses" style="grid-column: 10 / 19; --past: 83%;" title="PDP development; active QA batches"><span class="bar-type">IMPL</span><span class="bar-label">Build · QA</span></div></div></div><div class="row"><div class="row-label indented"><span class="label-top"><span>Bundle PDP (3 existing bundles · content/copy)</span><span class="id">NEW</span></span><span class="row-meta">In scope · no SKU changes</span></div><div class="row-track"><div class="cell prior"></div><div class="cell prior"></div><div class="cell prior"></div><div class="cell prior"></div><div class="cell prior"></div><div class="cell prior"></div><div class="cell prior"></div><div class="cell prior"></div><div class="cell prior"></div><div class="cell prior"></div><div class="cell prior"></div><div class="cell prior"></div><div class="cell prior"></div><div class="cell prior"></div><div class="cell prior"></div><div class="cell prior"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="bar implementations crosses" style="grid-column: 12 / 19; --past: 78%;" title="Bundle PDP template adaptations for the 3 existing bundles — content and copy only, no SKU changes"><span class="bar-type">IMPL</span><span class="bar-label">Bundle PDP</span></div></div></div></details><details class="group" open><summary class="row group-row"><div class="row-label">Cart &amp; Checkout <a class="group-id" href="https://anatta-io.atlassian.net/browse/HUM-292" target="_blank" rel="noopener">HUM-292</a></div><div class="row-track"><div class="cell prior"></div><div class="cell prior"></div><div class="cell prior"></div><div class="cell prior"></div><div class="cell prior"></div><div class="cell prior"></div><div class="cell prior"></div><div class="cell prior"></div><div class="cell prior"></div><div class="cell prior"></div><div class="cell prior"></div><div class="cell prior"></div><div class="cell prior"></div><div class="cell prior"></div><div class="cell prior"></div><div class="cell prior"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="bar compliance epic" style="grid-column: 13 / 19;"><span class="bar-type">IMPL</span>Cart &amp; checkout <span class="bar-status">In build → QA</span></div></div></summary><div class="row"><div class="row-label indented"><span class="label-top"><a href="https://anatta-io.atlassian.net/browse/HUM-331" target="_blank" rel="noopener">Cart / Cart Drawer design</a><a class="id" href="https://anatta-io.atlassian.net/browse/HUM-331" target="_blank" rel="noopener">HUM-331</a></span><span class="row-meta">Shipped</span></div><div class="row-track"><div class="cell prior"></div><div class="cell prior"></div><div class="cell prior"></div><div class="cell prior"></div><div class="cell prior"></div><div class="cell prior"></div><div class="cell prior"></div><div class="cell prior"></div><div class="cell prior"></div><div class="cell prior"></div><div class="cell prior"></div><div class="cell prior"></div><div class="cell prior"></div><div class="cell prior"></div><div class="cell prior"></div><div class="cell prior"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="bar compliance done" style="grid-column: 13 / 16;" title="Cart and cart-drawer design — approved"><span class="bar-type">IMPL</span><span class="bar-label">Design shipped</span></div></div></div><div class="row"><div class="row-label indented"><span class="label-top"><a href="https://anatta-io.atlassian.net/browse/HUM-292" target="_blank" rel="noopener">Cart &amp; Checkout build</a><a class="id" href="https://anatta-io.atlassian.net/browse/HUM-292" target="_blank" rel="noopener">HUM-292</a></span><span class="row-meta">In build</span></div><div class="row-track"><div class="cell prior"></div><div class="cell prior"></div><div class="cell prior"></div><div class="cell prior"></div><div class="cell prior"></div><div class="cell prior"></div><div class="cell prior"></div><div class="cell prior"></div><div class="cell prior"></div><div class="cell prior"></div><div class="cell prior"></div><div class="cell prior"></div><div class="cell prior"></div><div class="cell prior"></div><div class="cell prior"></div><div class="cell prior"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="bar compliance crosses" style="grid-column: 14 / 19; --past: 69%;" title="Cart and checkout development and QA"><span class="bar-type">IMPL</span><span class="bar-label">Build · QA</span></div></div></div></details><details class="group" open><summary class="row group-row"><div class="row-label">Account (Shopify + Recharge) <a class="group-id" href="https://anatta-io.atlassian.net/browse/HUM-291" target="_blank" rel="noopener">HUM-291</a></div><div class="row-track"><div class="cell prior"></div><div class="cell prior"></div><div class="cell prior"></div><div class="cell prior"></div><div class="cell prior"></div><div class="cell prior"></div><div class="cell prior"></div><div class="cell prior"></div><div class="cell prior"></div><div class="cell prior"></div><div class="cell prior"></div><div class="cell prior"></div><div class="cell prior"></div><div class="cell prior"></div><div class="cell prior"></div><div class="cell prior"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="bar promotions epic" style="grid-column: 14 / 19;"><span class="bar-type">IMPL</span>Account pages <span class="bar-status">In build → QA</span></div></div></summary><div class="row"><div class="row-label indented"><span class="label-top"><a href="https://anatta-io.atlassian.net/browse/HUM-329" target="_blank" rel="noopener">Account Pages design</a><a class="id" href="https://anatta-io.atlassian.net/browse/HUM-329" target="_blank" rel="noopener">HUM-329</a></span><span class="row-meta">Finalizing</span></div><div class="row-track"><div class="cell prior"></div><div class="cell prior"></div><div class="cell prior"></div><div class="cell prior"></div><div class="cell prior"></div><div class="cell prior"></div><div class="cell prior"></div><div class="cell prior"></div><div class="cell prior"></div><div class="cell prior"></div><div class="cell prior"></div><div class="cell prior"></div><div class="cell prior"></div><div class="cell prior"></div><div class="cell prior"></div><div class="cell prior"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="bar promotions" style="grid-column: 14 / 17;" title="Account pages design — finalizing"><span class="bar-type">IMPL</span><span class="bar-label">Design</span></div></div></div><div class="row"><div class="row-label indented"><span class="label-top"><a href="https://anatta-io.atlassian.net/browse/HUM-291" target="_blank" rel="noopener">Account Pages build (Shopify + Recharge)</a><a class="id" href="https://anatta-io.atlassian.net/browse/HUM-291" target="_blank" rel="noopener">HUM-291</a></span><span class="row-meta">In build</span></div><div class="row-track"><div class="cell prior"></div><div class="cell prior"></div><div class="cell prior"></div><div class="cell prior"></div><div class="cell prior"></div><div class="cell prior"></div><div class="cell prior"></div><div class="cell prior"></div><div class="cell prior"></div><div class="cell prior"></div><div class="cell prior"></div><div class="cell prior"></div><div class="cell prior"></div><div class="cell prior"></div><div class="cell prior"></div><div class="cell prior"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="bar promotions crosses" style="grid-column: 14 / 19; --past: 69%;" title="Shopify customer account + Recharge subscription management"><span class="bar-type">IMPL</span><span class="bar-label">Build · QA</span></div></div></div></details><details class="group" open><summary class="row group-row"><div class="row-label">Knowledge Center <a class="group-id" href="https://anatta-io.atlassian.net/browse/HUM-283" target="_blank" rel="noopener">HUM-283</a></div><div class="row-track"><div class="cell prior"></div><div class="cell prior"></div><div class="cell prior"></div><div class="cell prior"></div><div class="cell prior"></div><div class="cell prior"></div><div class="cell prior"></div><div class="cell prior"></div><div class="cell prior"></div><div class="cell prior"></div><div class="cell prior"></div><div class="cell prior"></div><div class="cell prior"></div><div class="cell prior"></div><div class="cell prior"></div><div class="cell prior"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="bar kc epic" style="grid-column: 10 / 19;"><span class="bar-type">IMPL</span>Knowledge Center (Phase 1) <span class="bar-status">In build → QA</span></div></div></summary><div class="row"><div class="row-label indented"><span class="label-top"><a href="https://anatta-io.atlassian.net/browse/HUM-344" target="_blank" rel="noopener">Knowledge Hub design</a><a class="id" href="https://anatta-io.atlassian.net/browse/HUM-344" target="_blank" rel="noopener">HUM-344</a></span><span class="row-meta">Finalizing</span></div><div class="row-track"><div class="cell prior"></div><div class="cell prior"></div><div class="cell prior"></div><div class="cell prior"></div><div class="cell prior"></div><div class="cell prior"></div><div class="cell prior"></div><div class="cell prior"></div><div class="cell prior"></div><div class="cell prior"></div><div class="cell prior"></div><div class="cell prior"></div><div class="cell prior"></div><div class="cell prior"></div><div class="cell prior"></div><div class="cell prior"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="bar kc" style="grid-column: 10 / 14;" title="Knowledge Center / hub design"><span class="bar-type">IMPL</span><span class="bar-label">Design</span></div></div></div><div class="row"><div class="row-label indented"><span class="label-top"><a href="https://anatta-io.atlassian.net/browse/HUM-307" target="_blank" rel="noopener">Knowledge Center templates</a><a class="id" href="https://anatta-io.atlassian.net/browse/HUM-307" target="_blank" rel="noopener">HUM-307</a></span><span class="row-meta">In build</span></div><div class="row-track"><div class="cell prior"></div><div class="cell prior"></div><div class="cell prior"></div><div class="cell prior"></div><div class="cell prior"></div><div class="cell prior"></div><div class="cell prior"></div><div class="cell prior"></div><div class="cell prior"></div><div class="cell prior"></div><div class="cell prior"></div><div class="cell prior"></div><div class="cell prior"></div><div class="cell prior"></div><div class="cell prior"></div><div class="cell prior"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="bar kc crosses" style="grid-column: 14 / 19; --past: 69%;" title="Knowledge Center templates"><span class="bar-type">IMPL</span><span class="bar-label">Templates</span></div></div></div><div class="row"><div class="row-label indented"><span class="label-top"><a href="https://anatta-io.atlassian.net/browse/HUM-283" target="_blank" rel="noopener">Knowledge Center build (Envive AI widget Phase 1)</a><a class="id" href="https://anatta-io.atlassian.net/browse/HUM-283" target="_blank" rel="noopener">HUM-283</a></span><span class="row-meta">Phase 1 · Shopify native search fallback</span></div><div class="row-track"><div class="cell prior"></div><div class="cell prior"></div><div class="cell prior"></div><div class="cell prior"></div><div class="cell prior"></div><div class="cell prior"></div><div class="cell prior"></div><div class="cell prior"></div><div class="cell prior"></div><div class="cell prior"></div><div class="cell prior"></div><div class="cell prior"></div><div class="cell prior"></div><div class="cell prior"></div><div class="cell prior"></div><div class="cell prior"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="bar kc crosses" style="grid-column: 14 / 19; --past: 69%;" title="Knowledge Center Phase 1 incl. Envive AI widget Phase 1 with Shopify native search fallback"><span class="bar-type">IMPL</span><span class="bar-label">Build · Phase 1</span></div></div></div></details><details class="group" open><summary class="row group-row"><div class="row-label">Content / Our Story <a class="group-id" href="https://anatta-io.atlassian.net/browse/HUM-686" target="_blank" rel="noopener">HUM-686</a></div><div class="row-track"><div class="cell prior"></div><div class="cell prior"></div><div class="cell prior"></div><div class="cell prior"></div><div class="cell prior"></div><div class="cell prior"></div><div class="cell prior"></div><div class="cell prior"></div><div class="cell prior"></div><div class="cell prior"></div><div class="cell prior"></div><div class="cell prior"></div><div class="cell prior"></div><div class="cell prior"></div><div class="cell prior"></div><div class="cell prior"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="bar content epic" style="grid-column: 15 / 24;"><span class="bar-type">IMPL</span>Our Story / Science page <span class="bar-status">Fast-follow</span></div></div></summary><div class="row"><div class="row-label indented"><span class="label-top"><a href="https://anatta-io.atlassian.net/browse/HUM-686" target="_blank" rel="noopener">Our Story / Science page</a><a class="id" href="https://anatta-io.atlassian.net/browse/HUM-686" target="_blank" rel="noopener">HUM-686</a></span><span class="row-meta">Design in progress · post-launch fast-follow</span></div><div class="row-track"><div class="cell prior"></div><div class="cell prior"></div><div class="cell prior"></div><div class="cell prior"></div><div class="cell prior"></div><div class="cell prior"></div><div class="cell prior"></div><div class="cell prior"></div><div class="cell prior"></div><div class="cell prior"></div><div class="cell prior"></div><div class="cell prior"></div><div class="cell prior"></div><div class="cell prior"></div><div class="cell prior"></div><div class="cell prior"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="bar content proposed" style="grid-column: 21 / 24;" title="Our Story / Science page — planned as a post-launch fast-follow after the Aug 17 go-live"><span class="bar-type">IMPL</span><span class="bar-label">Fast-follow</span></div></div></div></details><details class="group" open><summary class="row group-row"><div class="row-label">Platform &amp; Frontend <a class="group-id" href="https://anatta-io.atlassian.net/browse/HUM-277" target="_blank" rel="noopener">HUM-277</a></div><div class="row-track"><div class="cell prior"></div><div class="cell prior"></div><div class="cell prior"></div><div class="cell prior"></div><div class="cell prior"></div><div class="cell prior"></div><div class="cell prior"></div><div class="cell prior"></div><div class="cell prior"></div><div class="cell prior"></div><div class="cell prior"></div><div class="cell prior"></div><div class="cell prior"></div><div class="cell prior"></div><div class="cell prior"></div><div class="cell prior"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="bar plat epic" style="grid-column: 5 / 19;"><span class="bar-type">IMPL</span>Shopify frontend &amp; platform <span class="bar-status">In build</span></div></div></summary><div class="row"><div class="row-label indented"><span class="label-top"><a href="https://anatta-io.atlassian.net/browse/HUM-282" target="_blank" rel="noopener">Technical execution / architecture</a><a class="id" href="https://anatta-io.atlassian.net/browse/HUM-282" target="_blank" rel="noopener">HUM-282</a></span><span class="row-meta">Foundation complete</span></div><div class="row-track"><div class="cell prior"></div><div class="cell prior"></div><div class="cell prior"></div><div class="cell prior"></div><div class="cell prior"></div><div class="cell prior"></div><div class="cell prior"></div><div class="cell prior"></div><div class="cell prior"></div><div class="cell prior"></div><div class="cell prior"></div><div class="cell prior"></div><div class="cell prior"></div><div class="cell prior"></div><div class="cell prior"></div><div class="cell prior"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="bar plat done" style="grid-column: 5 / 15;" title="Technical execution and platform architecture foundation"><span class="bar-type">IMPL</span><span class="bar-label">Foundation</span></div></div></div><div class="row"><div class="row-label indented"><span class="label-top"><a href="https://anatta-io.atlassian.net/browse/HUM-277" target="_blank" rel="noopener">Shopify frontend (umbrella build)</a><a class="id" href="https://anatta-io.atlassian.net/browse/HUM-277" target="_blank" rel="noopener">HUM-277</a></span><span class="row-meta">In build to code freeze</span></div><div class="row-track"><div class="cell prior"></div><div class="cell prior"></div><div class="cell prior"></div><div class="cell prior"></div><div class="cell prior"></div><div class="cell prior"></div><div class="cell prior"></div><div class="cell prior"></div><div class="cell prior"></div><div class="cell prior"></div><div class="cell prior"></div><div class="cell prior"></div><div class="cell prior"></div><div class="cell prior"></div><div class="cell prior"></div><div class="cell prior"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="bar plat crosses" style="grid-column: 6 / 19; --past: 88%;" title="Shopify frontend umbrella build; child work runs through code freeze on Jul 31"><span class="bar-type">IMPL</span><span class="bar-label">Frontend build</span></div></div></div></details><details class="group" open><summary class="row group-row"><div class="row-label">QA / E2E &amp; Launch <a class="group-id" href="https://anatta-io.atlassian.net/browse/HUM-258" target="_blank" rel="noopener">HUM-258</a></div><div class="row-track"><div class="cell prior"></div><div class="cell prior"></div><div class="cell prior"></div><div class="cell prior"></div><div class="cell prior"></div><div class="cell prior"></div><div class="cell prior"></div><div class="cell prior"></div><div class="cell prior"></div><div class="cell prior"></div><div class="cell prior"></div><div class="cell prior"></div><div class="cell prior"></div><div class="cell prior"></div><div class="cell prior"></div><div class="cell prior"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="bar qa epic" style="grid-column: 17 / 24;"><span class="bar-type">IMPL</span>QA, E2E &amp; launch <span class="bar-status">Jul 20 → Sep 2</span></div></div></summary><div class="row"><div class="row-label indented"><span class="label-top"><a href="https://anatta-io.atlassian.net/browse/HUM-258" target="_blank" rel="noopener">E2E testing</a><a class="id" href="https://anatta-io.atlassian.net/browse/HUM-258" target="_blank" rel="noopener">HUM-258</a></span><span class="row-meta">Begins Jul 20</span></div><div class="row-track"><div class="cell prior"></div><div class="cell prior"></div><div class="cell prior"></div><div class="cell prior"></div><div class="cell prior"></div><div class="cell prior"></div><div class="cell prior"></div><div class="cell prior"></div><div class="cell prior"></div><div class="cell prior"></div><div class="cell prior"></div><div class="cell prior"></div><div class="cell prior"></div><div class="cell prior"></div><div class="cell prior"></div><div class="cell prior"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="bar qa crosses" style="grid-column: 17 / 19; --past: 21%;" title="End-to-end testing phase (test plan doc pending — QA folder currently empty)"><span class="bar-type">TEST</span><span class="bar-label">E2E testing</span></div></div></div><div class="row"><div class="row-label indented"><span class="label-top"><a href="https://anatta-io.atlassian.net/browse/HUM-269" target="_blank" rel="noopener">Anatta QA — E2E</a><a class="id" href="https://anatta-io.atlassian.net/browse/HUM-269" target="_blank" rel="noopener">HUM-269</a></span><span class="row-meta">Aug 3 – 10</span></div><div class="row-track"><div class="cell prior"></div><div class="cell prior"></div><div class="cell prior"></div><div class="cell prior"></div><div class="cell prior"></div><div class="cell prior"></div><div class="cell prior"></div><div class="cell prior"></div><div class="cell prior"></div><div class="cell prior"></div><div class="cell prior"></div><div class="cell prior"></div><div class="cell prior"></div><div class="cell prior"></div><div class="cell prior"></div><div class="cell prior"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="bar qa" style="grid-column: 19 / 21;" title="Anatta-led quality assurance E2E"><span class="bar-type">TEST</span><span class="bar-label">Anatta QA</span></div></div></div><div class="row"><div class="row-label indented"><span class="label-top"><a href="https://anatta-io.atlassian.net/browse/HUM-268" target="_blank" rel="noopener">Client E2E</a><a class="id" href="https://anatta-io.atlassian.net/browse/HUM-268" target="_blank" rel="noopener">HUM-268</a></span><span class="row-meta">Aug 10 – 17 · sign-off to go-live</span></div><div class="row-track"><div class="cell prior"></div><div class="cell prior"></div><div class="cell prior"></div><div class="cell prior"></div><div class="cell prior"></div><div class="cell prior"></div><div class="cell prior"></div><div class="cell prior"></div><div class="cell prior"></div><div class="cell prior"></div><div class="cell prior"></div><div class="cell prior"></div><div class="cell prior"></div><div class="cell prior"></div><div class="cell prior"></div><div class="cell prior"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="bar qa" style="grid-column: 20 / 22;" title="Client end-to-end testing and sign-off into go-live"><span class="bar-type">TEST</span><span class="bar-label">Client E2E</span></div></div></div><div class="row"><div class="row-label indented"><span class="label-top"><a href="https://anatta-io.atlassian.net/browse/HUM-257" target="_blank" rel="noopener">Post-launch / hypercare</a><a class="id" href="https://anatta-io.atlassian.net/browse/HUM-257" target="_blank" rel="noopener">HUM-257</a></span><span class="row-meta">Aug 17 – Sep 2</span></div><div class="row-track"><div class="cell prior"></div><div class="cell prior"></div><div class="cell prior"></div><div class="cell prior"></div><div class="cell prior"></div><div class="cell prior"></div><div class="cell prior"></div><div class="cell prior"></div><div class="cell prior"></div><div class="cell prior"></div><div class="cell prior"></div><div class="cell prior"></div><div class="cell prior"></div><div class="cell prior"></div><div class="cell prior"></div><div class="cell prior"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="bar qa" style="grid-column: 21 / 24;" title="Post-launch monitoring and hypercare window"><span class="bar-type">IMPL</span><span class="bar-label">Post-launch monitoring</span></div></div></div></details>
+    </div>
+  </div>
+  <div class="legend-note">One page for the whole engagement — shipped work on the left, in-flight at the today line, and the road to the Aug 17 go-live and post-launch on the right. Bars are epic-level; refined from sprint demos and status calls. Dates reflect the current schedule, not the (stale) Jira milestone markers.</div>
+  <div class="legend">
+    <div class="legend-group">
+      <div class="legend-item"><span class="swatch cart"></span>Homepage</div>
+      <div class="legend-item"><span class="swatch plp"></span>Header/Footer/Global</div>
+      <div class="legend-item"><span class="swatch experiments"></span>PLP</div>
+      <div class="legend-item"><span class="swatch implementations"></span>PDP &amp; Bundle</div>
+      <div class="legend-item"><span class="swatch compliance"></span>Cart &amp; Checkout</div>
+      <div class="legend-item"><span class="swatch promotions"></span>Account</div>
+      <div class="legend-item"><span class="swatch kc"></span>Knowledge Center</div>
+      <div class="legend-item"><span class="swatch content"></span>Content</div>
+      <div class="legend-item"><span class="swatch plat"></span>Platform</div>
+      <div class="legend-item"><span class="swatch qa"></span>QA / E2E &amp; Launch</div>
+    </div>
+    <div class="legend-group">
+      <div class="legend-item"><span class="swatch done"></span>Shipped</div>
+      <div class="legend-item"><span class="swatch crosses"></span>In progress</div>
+      <div class="legend-item"><span class="swatch proposed"></span>Fast-follow / proposed</div>
+    </div>
+    <div class="legend-group">
+      <div class="legend-item"><span class="legend-pill">IMPL</span>Build</div>
+      <div class="legend-item"><span class="legend-pill">TEST</span>Testing</div>
+    </div>
+    <div class="legend-group">
+      <div class="legend-item"><span class="legend-diamond release"></span>Milestone</div>
+      <div class="legend-item"><span class="legend-diamond projected"></span>Projected</div>
+      <div class="legend-item"><span class="legend-diamond renewal"></span>Go-live</div>
+      <div class="legend-item"><span class="legend-today"></span>Today</div>
+    </div>
+  </div>
+  <footer>HUMANN · Shopify Horizon Redesign · Draft roadmap — internal review. Source: Jira HUM (read-only) + Confluence HU.</footer>
+</div>
+<script>
+  (function(){
+    var ganttStart=new Date('2026-03-30T00:00:00'); // Monday of the FIRST column
+    var ganttEnd=new Date('2026-09-14T00:00:00');    // end of the LAST column
+    var MONTHS=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+    function update(){
+      var today=new Date();
+      var td=document.getElementById('todayDate');
+      if(td) td.textContent=MONTHS[today.getMonth()]+' '+today.getDate();
+      var elapsed=(today-ganttStart)/86400000, span=(ganttEnd-ganttStart)/86400000;
+      var pct=Math.max(0,Math.min(1,elapsed/span));
+      var line=document.getElementById('todayLine'), g=document.querySelector('.gantt');
+      if(line&&g){var lw=parseInt(getComputedStyle(g).getPropertyValue('--label-col'),10)||280;
+        var tw=g.offsetWidth-lw; line.style.left=(lw+tw*pct)+'px'; line.style.display='block';}
+    }
+    function setAll(o){document.querySelectorAll('details.group').forEach(function(d){d.open=o;});}
+    function bind(){
+      var e=document.getElementById('expandAll'),c=document.getElementById('collapseAll');
+      if(e)e.addEventListener('click',function(){setAll(true);});
+      if(c)c.addEventListener('click',function(){setAll(false);});
+      document.querySelectorAll('summary.row a').forEach(function(a){a.addEventListener('click',function(ev){ev.stopPropagation();});});
+      bindResizer();
+    }
+    function bindResizer(){
+      var r=document.getElementById('colResizer'),g=document.querySelector('.gantt');
+      if(!r||!g)return; var MIN=200,MAX=600;
+      var s=parseInt(localStorage.getItem('roadmap-label-col'),10);
+      if(!isNaN(s)&&s>=MIN&&s<=MAX)g.style.setProperty('--label-col',s+'px');
+      r.addEventListener('pointerdown',function(e){e.preventDefault();
+        var sx=e.clientX,sw=parseInt(getComputedStyle(g).getPropertyValue('--label-col'),10)||280;
+        r.classList.add('dragging');try{r.setPointerCapture(e.pointerId);}catch(_){}
+        document.body.style.userSelect='none';document.body.style.cursor='col-resize';
+        function mv(ev){var w=Math.max(MIN,Math.min(MAX,sw+(ev.clientX-sx)));g.style.setProperty('--label-col',w+'px');update();}
+        function up(){r.classList.remove('dragging');document.body.style.userSelect='';document.body.style.cursor='';
+          var f=parseInt(getComputedStyle(g).getPropertyValue('--label-col'),10);if(f)localStorage.setItem('roadmap-label-col',f);
+          window.removeEventListener('pointermove',mv);window.removeEventListener('pointerup',up);}
+        window.addEventListener('pointermove',mv);window.addEventListener('pointerup',up);});
+    }
+    function sched(){requestAnimationFrame(update);}
+    function init(){update();bind();sched();
+      var g=document.querySelector('.gantt');
+      if(g&&typeof ResizeObserver!=='undefined'){new ResizeObserver(sched).observe(g);}
+      if(document.fonts&&document.fonts.ready)document.fonts.ready.then(sched);}
+    if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init);else init();
+    window.addEventListener('load',sched);window.addEventListener('resize',sched);
+    setInterval(update,60000);
+    document.addEventListener('visibilitychange',function(){if(!document.hidden)update();});
+  })();
+</script>
+</body>
+</html>
