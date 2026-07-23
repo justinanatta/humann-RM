@@ -903,6 +903,43 @@
   .bar.proposed .bar-type { background: rgba(0,0,0,0.14); color: var(--ink); }
   .bar.proposed .bar-owner { color: var(--ink-mid); }
   .swatch.proposed { background-color: #E0E5E9; border-color: #3D5F73; background-image: none; }
+  :root { --kc:#4E4A7A; --content:#6B4A2A; --plat:#3F5A34; --cro:#6E3A5A; --qa:#6B3A4A; }
+  .row-label.pg-haschip { flex-direction: row; align-items: center; gap: 12px; }
+  .pg-txt { display: flex; flex-direction: column; gap: 2px; min-width: 0; flex: 1; }
+  .pg-chip { height: 20px; padding: 2px 8px; border: 1px solid var(--rule); border-radius: 2px; background: transparent; font-size: 10px; font-weight: 600; color: var(--ink); display: inline-flex; align-items: center; gap: 5px; white-space: nowrap; cursor: pointer; flex-shrink: 0; font-family: var(--font); font-variant-numeric: tabular-nums; }
+  .pg-chip:hover { background: var(--ground-elev); }
+  .pg-chip .pg-car { font-size: 8px; color: var(--ink-mute); }
+  .pg-chip.pg-shipped { color: var(--ink-mute); }
+  .pg-chip .pg-ball.pg-blocked { color: var(--signal); font-weight: 700; }
+  .pg-drawer { border-bottom: 1px solid var(--rule); background: var(--ground); }
+  .pg-drawer-in { position: sticky; left: 0; width: calc(100vw - 96px); }
+  .pg-drawer-card { width: min(860px, calc(100% - 48px)); margin: 10px auto 16px; background: #fff; border: 1px solid var(--rule); border-left-width: 3px; border-left-style: solid; border-radius: 2px; padding: 14px 18px; }
+  .pg-dhead { display: flex; align-items: baseline; gap: 12px; margin-bottom: 12px; }
+  .pg-dhead .pg-nm { font-size: 12.5px; font-weight: 600; }
+  .pg-dhead .pg-jl { font-size: 10px; color: var(--ink-mute); margin-left: auto; }
+  .pg-dhead .pg-jl a { color: inherit; }
+  .pg-meters { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 20px; margin-bottom: 14px; }
+  @media (max-width: 700px) { .pg-meters { grid-template-columns: 1fr; } }
+  .pg-m .pg-l { font-size: 9px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink-mute); font-weight: 600; margin-bottom: 4px; }
+  .pg-m .pg-v { font-size: 16px; font-weight: 600; margin-bottom: 4px; }
+  .pg-m .pg-t { height: 6px; border-radius: 2px; background: rgba(26,31,26,0.08); position: relative; overflow: hidden; }
+  .pg-m .pg-f { position: absolute; inset: 0 auto 0 0; width: var(--w); border-radius: 2px; }
+  .pg-m .pg-f.pg-hatch { background-image: repeating-linear-gradient(45deg, rgba(255,255,255,0.45) 0, rgba(255,255,255,0.45) 3px, transparent 3px, transparent 7px); }
+  .pg-m .pg-f.pg-joint { background: var(--ink) !important; }
+  .pg-m .pg-b { font-size: 9px; color: var(--ink-mute); margin-top: 4px; line-height: 1.4; }
+  .pg-rhead { font-size: 9px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--ink-mute); font-weight: 700; margin: 0 0 4px; }
+  .pg-items { width: 100%; border-collapse: collapse; }
+  .pg-items td { padding: 5px 0; border-bottom: 1px solid var(--rule); font-size: 11px; color: var(--ink); vertical-align: baseline; }
+  .pg-items td.pg-tk { width: 82px; font-size: 10px; color: var(--ink-mute); }
+  .pg-items td.pg-tk a { color: inherit; }
+  .pg-items td.pg-ow { width: 96px; font-size: 9.5px; text-transform: uppercase; letter-spacing: 0.08em; color: var(--ink-mid); font-weight: 600; }
+  .pg-items td.pg-st { width: 168px; font-size: 10px; color: var(--ink-mid); }
+  .pg-items td.pg-st.pg-blocked { color: var(--signal); font-weight: 600; }
+  .pg-items tr:last-child td { border-bottom: none; }
+  .pg-dfoot { font-size: 9.5px; font-style: italic; color: var(--ink-mute); margin-top: 10px; }
+  .pg-barpct { position: absolute; top: 50%; transform: translateY(-50%); font-size: 10.5px; font-weight: 700; white-space: nowrap; background: rgba(0,0,0,0.30); padding: 2px 6px; border-radius: 2px; color: white; }
+  .bar.pg-scoped .bar-owner { display: none; }
+  .pg-gpct { margin-left: auto; font-size: 11px; font-weight: 600; color: var(--ink-mid); text-transform: none; letter-spacing: 0; }
 </style>
 <body>
 <div class="page">
@@ -1015,6 +1052,412 @@
     setInterval(update,60000);
     document.addEventListener('visibilitychange',function(){if(!document.hidden)update();});
   })();
+</script><script type="application/json" id="progress-data">
+{
+  "asof": "2026-07-23",
+  "initiatives": {
+    "HUM-443": {
+      "shipped": "homepage build complete"
+    },
+    "HUM-449": {
+      "shipped": "header shipped"
+    },
+    "HUM-448": {
+      "shipped": "footer shipped"
+    },
+    "HUM-452": {
+      "shipped": "PLP + Quick View shipped"
+    },
+    "HUM-282": {
+      "shipped": "technical foundation complete"
+    },
+    "HUM-641": {
+      "anatta": {
+        "pct": 90,
+        "basis": "global components + animation framework in QA \u2014 PM estimate",
+        "src": "pm"
+      },
+      "weight": 90,
+      "items": [
+        {
+          "name": "Global components & scroll-animation framework",
+          "ticket": "HUM-641",
+          "owner": "anatta",
+          "state": "in_progress",
+          "size": 2
+        }
+      ]
+    },
+    "HUM-451": {
+      "anatta": {
+        "pct": 85,
+        "basis": "core PDP complete; design signed off Jul 8 \u2014 PM estimate",
+        "src": "pm"
+      },
+      "weight": 70,
+      "items": [
+        {
+          "name": "PDP build & QA",
+          "ticket": "HUM-451",
+          "owner": "anatta",
+          "state": "in_progress",
+          "size": 2
+        },
+        {
+          "name": "PDP content & copy",
+          "owner": "client",
+          "state": "in_progress",
+          "size": 2
+        }
+      ]
+    },
+    "Product templates (up to 17)": {
+      "anatta": {
+        "pct": 20,
+        "basis": "template build-out from Jul 24 \u2014 PM estimate",
+        "src": "pm"
+      },
+      "weight": 50,
+      "items": [
+        {
+          "name": "Per-product template build (from existing components)",
+          "owner": "anatta",
+          "state": "in_progress",
+          "size": 3,
+          "note": "top 5 from Jul 24"
+        },
+        {
+          "name": "Product copy & imagery",
+          "owner": "client",
+          "state": "in_progress",
+          "size": 3,
+          "note": "needed before Aug 3"
+        },
+        {
+          "name": "Figma per-product templates",
+          "owner": "client",
+          "state": "in_progress",
+          "size": 2
+        }
+      ]
+    },
+    "Bundle PDP (3 existing bundles)": {
+      "anatta": {
+        "pct": 70,
+        "basis": "3 bundle templates in build \u2014 PM estimate",
+        "src": "pm"
+      },
+      "weight": 60,
+      "items": [
+        {
+          "name": "Bundle PDP build",
+          "owner": "anatta",
+          "state": "in_progress",
+          "size": 2
+        },
+        {
+          "name": "Bundle content & copy",
+          "owner": "client",
+          "state": "in_progress",
+          "size": 1
+        }
+      ]
+    },
+    "Reviews & ratings integration": {
+      "anatta": {
+        "pct": 30,
+        "basis": "awaiting client portal access \u2014 PM estimate",
+        "src": "pm"
+      },
+      "weight": 50,
+      "items": [
+        {
+          "name": "Bazaarvoice rating integration",
+          "owner": "anatta",
+          "state": "not_started",
+          "size": 2,
+          "note": "awaiting access"
+        },
+        {
+          "name": "Reviews portal access",
+          "owner": "client",
+          "state": "in_progress",
+          "size": 1,
+          "blocked": true,
+          "note": "awaiting access"
+        }
+      ]
+    },
+    "HUM-453": {
+      "anatta": {
+        "pct": 80,
+        "basis": "demoed Sprint 5 \u00b7 in QA \u2014 PM estimate",
+        "src": "pm"
+      },
+      "weight": 80,
+      "items": [
+        {
+          "name": "Cart & checkout build",
+          "ticket": "HUM-453",
+          "owner": "anatta",
+          "state": "in_progress",
+          "size": 2
+        },
+        {
+          "name": "Express payments finalization",
+          "owner": "anatta",
+          "state": "in_progress",
+          "size": 1
+        }
+      ]
+    },
+    "Shopify customer account pages": {
+      "anatta": {
+        "pct": 75,
+        "basis": "substantially built \u2014 PM estimate",
+        "src": "pm"
+      },
+      "weight": 80,
+      "items": [
+        {
+          "name": "Account pages build",
+          "owner": "anatta",
+          "state": "in_progress",
+          "size": 2
+        },
+        {
+          "name": "Requirements sign-off",
+          "owner": "client",
+          "state": "done",
+          "size": 1
+        }
+      ]
+    },
+    "HUM-455": {
+      "anatta": {
+        "pct": 60,
+        "basis": "Recharge portal build in progress \u2014 PM estimate",
+        "src": "pm"
+      },
+      "weight": 85,
+      "items": [
+        {
+          "name": "Recharge subscription management",
+          "ticket": "HUM-455",
+          "owner": "anatta",
+          "state": "in_progress",
+          "size": 2
+        }
+      ]
+    },
+    "HUM-283": {
+      "anatta": {
+        "pct": 90,
+        "basis": "majority through QA \u2014 PM estimate",
+        "src": "pm"
+      },
+      "weight": 75,
+      "items": [
+        {
+          "name": "Knowledge Center build",
+          "ticket": "HUM-283",
+          "owner": "anatta",
+          "state": "in_progress",
+          "size": 2
+        },
+        {
+          "name": "Article content & metadata",
+          "owner": "client",
+          "state": "in_progress",
+          "size": 1
+        }
+      ]
+    },
+    "Envive AI widget (Phase 1)": {
+      "anatta": {
+        "pct": 60,
+        "basis": "integration in build; vendor config pending \u2014 PM estimate",
+        "src": "pm"
+      },
+      "weight": 50,
+      "items": [
+        {
+          "name": "Widget integration + native fallback",
+          "owner": "anatta",
+          "state": "in_progress",
+          "size": 2
+        },
+        {
+          "name": "Vendor site-wide config",
+          "owner": "client",
+          "state": "in_progress",
+          "size": 1,
+          "blocked": true,
+          "note": "vendor"
+        }
+      ]
+    },
+    "HUM-315": {
+      "anatta": {
+        "pct": 80,
+        "basis": "repo & pipeline config \u2014 PM estimate",
+        "src": "pm"
+      },
+      "weight": 100,
+      "items": [
+        {
+          "name": "Repo & pipeline configuration",
+          "ticket": "HUM-315",
+          "owner": "anatta",
+          "state": "in_progress",
+          "size": 1
+        }
+      ]
+    }
+  }
+}
+</script>
+<script>
+/* progress + parity renderer — chips, drawers, bar %s, lane rollups. Rows absent from data are untouched. */
+(function () {
+  var CREDIT = { not_started: 0, in_progress: 50, done: 100 };
+  var LANES = ['cart','plp','experiments','implementations','compliance','promotions','kc','content','plat','cro','qa'];
+  var data;
+  try { data = JSON.parse(document.getElementById('progress-data').textContent); }
+  catch (e) { console.warn('progress-data unparsable', e); return; }
+  function clientPct(rec) {
+    if (rec.client && typeof rec.client.pct === 'number') return rec.client.pct;
+    var items = (rec.items || []).filter(function (i) { return i.owner === 'client'; });
+    if (!items.length) return null;
+    var num = 0, den = 0;
+    items.forEach(function (i) { var w = i.size || 1; num += CREDIT[i.state] * w; den += w; });
+    return Math.round(num / den / 5) * 5;
+  }
+  function clientBasis(rec) {
+    if (rec.client && rec.client.basis) return rec.client.basis;
+    var items = (rec.items || []).filter(function (i) { return i.owner === 'client'; });
+    var n = { not_started: 0, in_progress: 0, done: 0 };
+    items.forEach(function (i) { n[i.state]++; });
+    var parts = [];
+    if (n.done) parts.push(n.done + ' done');
+    if (n.in_progress) parts.push(n.in_progress + ' in progress');
+    if (n.not_started) parts.push(n.not_started + ' not started');
+    return items.length ? items.length + ' item' + (items.length > 1 ? 's' : '') + ': ' + parts.join(' \u00b7 ') : 'no client items';
+  }
+  function jointPct(rec, an, cl) {
+    if (typeof rec.joint === 'number') return rec.joint;
+    var w = (rec.weight == null ? 60 : rec.weight) / 100;
+    if (cl == null) return an;
+    return Math.round(w * an + (1 - w) * cl);
+  }
+  function ballOf(rec) {
+    var open = (rec.items || []).filter(function (i) { return i.state !== 'done'; });
+    var c = open.some(function (i) { return i.owner === 'client'; });
+    var a = open.some(function (i) { return i.owner === 'anatta'; });
+    return c && a ? 'both' : c ? 'HUMANN' : a ? 'Anatta' : null;
+  }
+  function jiraLink(tk) { return tk ? '<a href="https://anatta-io.atlassian.net/browse/' + tk + '" target="_blank" rel="noopener">' + tk + '</a>' : '\u2014'; }
+  function esc(s) { var d = document.createElement('span'); d.textContent = s || ''; return d.innerHTML; }
+  var rows = [];
+  document.querySelectorAll('.row').forEach(function (row) {
+    var lbl = row.querySelector('.row-label.indented');
+    if (!lbl) return;
+    var nameEl = lbl.querySelector('.label-top a:not(.id), .label-top span:not(.id)');
+    var idEl = lbl.querySelector('.label-top .id');
+    var name = nameEl ? nameEl.textContent.trim() : '';
+    var id = idEl ? idEl.textContent.trim() : '';
+    var rec = null, key = null;
+    if (id && id !== 'NEW' && data.initiatives[id]) { rec = data.initiatives[id]; key = id; }
+    else { for (var k in data.initiatives) { if (!/^HUM-\d+$/.test(k) && name.indexOf(k) === 0) { rec = data.initiatives[k]; key = k; break; } } }
+    if (!rec) return;
+    var barEl = row.querySelector('.bar');
+    var lane = null;
+    if (barEl) LANES.forEach(function (c) { if (barEl.classList.contains(c)) lane = c; });
+    rows.push({ row: row, lbl: lbl, name: name, id: id, key: key, rec: rec, barEl: barEl, lane: lane, shipped: !!rec.shipped });
+  });
+  rows.forEach(function (r) {
+    if (r.shipped) { r.an = 100; r.cl = 100; r.joint = 100; return; }
+    r.an = r.rec.anatta.pct; r.cl = clientPct(r.rec); r.joint = jointPct(r.rec, r.an, r.cl);
+    r.ball = ballOf(r.rec);
+    r.blocked = (r.rec.items || []).some(function (i) { return i.blocked && i.state !== 'done'; });
+  });
+  rows.forEach(function (r) {
+    r.lbl.classList.add('pg-haschip');
+    var txt = document.createElement('span'); txt.className = 'pg-txt';
+    while (r.lbl.firstChild) txt.appendChild(r.lbl.firstChild);
+    var chip = document.createElement('button');
+    chip.className = 'pg-chip' + (r.shipped ? ' pg-shipped' : '');
+    chip.setAttribute('aria-expanded', 'false');
+    var did = 'pg-drawer-' + r.key.replace(/[^A-Za-z0-9-]/g, '');
+    chip.setAttribute('aria-controls', did);
+    chip.innerHTML = r.shipped ? '100%' : r.joint + '%' + (r.ball ? ' \u00b7 <span class="pg-ball' + (r.blocked ? ' pg-blocked' : '') + '">with ' + r.ball + '</span>' : '') + ' <span class="pg-car">\u25be</span>';
+    chip.addEventListener('click', function (e) { e.preventDefault(); e.stopPropagation(); toggleDrawer(r, chip, did); });
+    r.lbl.appendChild(txt); r.lbl.appendChild(chip);
+    r.chip = chip;
+  });
+  function laneColor(lane) { return lane ? 'var(--' + lane + ')' : 'var(--ink-mid)'; }
+  function buildDrawer(r, did) {
+    var d = document.createElement('div'); d.className = 'pg-drawer'; d.id = did;
+    var its = (r.rec.items || []).slice().sort(function (a, b) { return (a.owner === 'client' ? 0 : 1) - (b.owner === 'client' ? 0 : 1); });
+    var open = its.filter(function (i) { return i.state !== 'done'; });
+    var itemsHtml;
+    if (r.shipped) itemsHtml = '<tr><td colspan="4" style="color:var(--ink-mute)">No open items \u00b7 ' + esc(r.rec.shipped) + '</td></tr>';
+    else if (!its.length) itemsHtml = '<tr><td colspan="4" style="color:var(--ink-mute)">No itemized tickets \u2014 next: joint sign-off</td></tr>';
+    else itemsHtml = its.map(function (i) {
+      var st = i.state.replace('_', ' ') + (i.note ? ' \u00b7 ' + esc(i.note) : '');
+      return '<tr><td>' + esc(i.name) + '</td><td class="pg-tk">' + jiraLink(i.ticket) + '</td><td class="pg-ow">' + (i.owner === 'client' ? 'HUMANN' : 'Anatta') + '</td><td class="pg-st' + (i.blocked ? ' pg-blocked' : '') + '">' + (i.blocked ? 'blocked \u2014 ' : '') + st + '</td></tr>';
+    }).join('');
+    var anBasis = r.shipped ? 'complete' : esc(r.rec.anatta.basis);
+    var cBasis = r.shipped ? 'complete' : esc(clientBasis(r.rec));
+    var wgt = (r.rec.weight == null ? 60 : r.rec.weight);
+    var jBasis = 'weighted ' + wgt + '/' + (100 - wgt) + ' by scope';
+    d.innerHTML = '<div class="pg-drawer-in"><div class="pg-drawer-card" style="border-left-color:' + laneColor(r.lane) + '">'
+      + '<div class="pg-dhead"><span class="pg-nm">' + esc(r.name) + '</span><span class="pg-jl">' + (r.id && r.id !== 'NEW' ? jiraLink(r.id) + ' \u2197' : '') + '</span></div>'
+      + '<div class="pg-meters">'
+      + '<div class="pg-m"><div class="pg-l">Anatta \u2014 ' + (r.shipped || r.rec.anatta.src === 'jira' ? 'from Jira' : 'PM estimate') + '</div><div class="pg-v">' + r.an + '%</div><div class="pg-t"><div class="pg-f" style="--w:' + r.an + '%; background:' + laneColor(r.lane) + '"></div></div><div class="pg-b">' + anBasis + '</div></div>'
+      + '<div class="pg-m"><div class="pg-l">HUMANN \u2014 client-reported</div><div class="pg-v">' + (r.cl == null ? '\u2014' : r.cl + '%') + '</div><div class="pg-t"><div class="pg-f pg-hatch" style="--w:' + (r.cl || 0) + '%; background:' + laneColor(r.lane) + '"></div></div><div class="pg-b">' + cBasis + '</div></div>'
+      + '<div class="pg-m"><div class="pg-l">Joint</div><div class="pg-v">' + r.joint + '%</div><div class="pg-t"><div class="pg-f pg-joint" style="--w:' + r.joint + '%"></div></div><div class="pg-b">' + jBasis + '</div></div>'
+      + '</div>'
+      + '<div class="pg-rhead">Open items (' + open.length + ')</div><table class="pg-items">' + itemsHtml + '</table>'
+      + '<div class="pg-dfoot">Bars show schedule; these numbers show completion. Anatta % is Jira-derived or a PM estimate; HUMANN % rolls up client-reported item states. Updated ' + esc(data.asof) + '.</div>'
+      + '</div></div>';
+    return d;
+  }
+  function toggleDrawer(r, chip, did) {
+    if (r.drawer) { r.drawer.remove(); r.drawer = null; chip.setAttribute('aria-expanded', 'false'); var c1 = chip.querySelector('.pg-car'); if (c1) c1.textContent = '\u25be'; return; }
+    r.drawer = buildDrawer(r, did); r.row.insertAdjacentElement('afterend', r.drawer);
+    chip.setAttribute('aria-expanded', 'true'); var c2 = chip.querySelector('.pg-car'); if (c2) c2.textContent = '\u25b4';
+  }
+  document.addEventListener('keydown', function (e) { if (e.key !== 'Escape') return; rows.forEach(function (r) { if (r.drawer) toggleDrawer(r, r.chip, r.chip.getAttribute('aria-controls')); }); });
+  var wrap = document.querySelector('.gantt-wrap');
+  var pinned = [];
+  rows.forEach(function (r) {
+    if (!r.barEl || r.shipped) return;
+    r.barEl.classList.add('pg-scoped');
+    var span = document.createElement('span'); span.className = 'pg-barpct'; span.textContent = r.joint + '%';
+    r.barEl.appendChild(span); pinned.push({ bar: r.barEl, pct: span });
+  });
+  function clampPcts() {
+    if (!wrap) return; var wr = wrap.getBoundingClientRect();
+    pinned.forEach(function (p) {
+      var br = p.bar.getBoundingClientRect();
+      if (br.width < 84) { p.pct.style.display = 'none'; return; }
+      p.pct.style.display = '';
+      var visRight = Math.min(br.right, wr.right);
+      p.pct.style.left = Math.max(visRight - br.left - p.pct.offsetWidth - 10, 40) + 'px';
+    });
+  }
+  if (wrap) wrap.addEventListener('scroll', clampPcts, { passive: true });
+  window.addEventListener('resize', clampPcts, { passive: true });
+  clampPcts();
+  document.querySelectorAll('details.group > summary .row-label').forEach(function (gl) {
+    var g = gl.closest('details.group'); var joints = [];
+    g.querySelectorAll('.row').forEach(function (row) { var hit = rows.filter(function (r) { return r.row === row; })[0]; if (hit) joints.push(hit.joint); });
+    if (!joints.length) return;
+    var pct = Math.round(joints.reduce(function (a, b) { return a + b; }, 0) / joints.length);
+    var s = document.createElement('span'); s.className = 'pg-gpct'; s.textContent = pct + '%'; gl.appendChild(s);
+  });
+})();
 </script>
 </body>
 </html>
