@@ -1,0 +1,33 @@
+{
+  "_note": "PATHS: transcripts_dir and audit_output_dir are resolved against the repo root when relative, which is what the defaults below do. Keep them relative so this config works on any PM's machine; an absolute path encodes one person's filesystem and breaks for the next PM who clones the repo. A leading '~' is NOT expanded and is an error, not a fallback. Not yet read by anything shipping today, leave as-is: client_key, overlay.*, jira.api_token_ref, jira.progress.",
+  "_note_visibility": "jira.visibility decides what the client can see, and it fails closed: only what is listed appears. mode 'config' needs no write access to Jira and is the default. mode 'label' uses the 'roadmap' label instead, and is only for a Jira board Anatta owns. include_parents is deliberately separate from lanes: lanes says which lane an issue lands in, include_parents says whether it is visible at all, so mapping an epic for placement never publishes all of its children.",
+  "client_name": "Sample Client",
+  "client_key": "sample",
+  "html_file": "index.html",
+  "live_url": "https://sample-roadmap.vercel.app/",
+  "review_branch": "draft",
+  "preview_port": 8747,
+  "transcripts_dir": "../sources/transcripts/",
+  "jira": {
+    "site": "anatta-io.atlassian.net",
+    "project": "PROJ",
+    "visibility": {
+      "mode": "config",
+      "note": "Read-only in the client's Jira. Never label, edit, transition or comment.",
+      "include_parents": ["PROJ-53", "PROJ-59", "PROJ-61", "PROJ-101"],
+      "include_keys": [],
+      "exclude_keys": []
+    },
+    "lanes": {
+      "cart": "PROJ-53",
+      "plp": "PROJ-59",
+      "experiments": "PROJ-61",
+      "implementations": "PROJ-101"
+    },
+    "progress": [],
+    "api_token_ref": null
+  },
+  "overlay": { "enabled": false, "drawer_links": "none" },
+  "deep_sources": { "tracker_file": null, "confluence_space": null, "slack_channels": [] },
+  "audit_output_dir": "../audits/"
+}

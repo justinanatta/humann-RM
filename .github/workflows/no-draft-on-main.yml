@@ -1,0 +1,47 @@
+# Hard backstop for the client-facing deploy (SPEC §4, §6, §7).
+#
+# Runs scripts/check-roadmap.py in --publish mode, which fails on: a `draft`-tagged
+# swimlane, unresolved template placeholders, a malformed grid, bad bar encoding,
+# missing legend entries, and topbar/footer version disagreement.
+#
+# This replaced a `grep ... index.html` check that failed OPEN in three ways — a
+# single-quoted class attribute, a class attribute wrapped across lines, and an
+# absent or renamed board file all made grep exit without a match, so the job
+# printed "client-clean" and passed. The checker parses real tags, reads the
+# configured html_file rather than hardcoding index.html, and treats an unreadable
+# board as a failure.
+#
+# Make this a REQUIRED status check in branch protection — on `push` alone it is
+# detection after the fact, and a direct push can race the Vercel deploy.
+name: no-draft-on-main
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  check:
+    # The job name is what GitHub reports as the status-check context, and it is
+    # what you type into branch protection. Without this it would report as
+    # "check", so requiring "no-draft-on-main" would silently match nothing and
+    # the branch would be protected by a rule that never runs.
+    name: no-draft-on-main
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Resolve the configured board file
+        id: board
+        run: |
+          board=index.html
+          if [ -f roadmap.config.json ]; then
+            found=$(python3 -c "import json;print(json.load(open('roadmap.config.json')).get('html_file') or '')" 2>/dev/null || true)
+            [ -n "$found" ] && board="$found"
+          fi
+          echo "file=$board" >> "$GITHUB_OUTPUT"
+          echo "Checking $board"
+
+      - name: Roadmap publish gate
+        run: python3 scripts/check-roadmap.py "${{ steps.board.outputs.file }}" --publish

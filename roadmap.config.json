@@ -1,0 +1,127 @@
+{
+  "client_name": "HUMANN",
+  "client_key": "hum",
+  "html_file": "index.html",
+  "live_url": "https://humann-rm.vercel.app/",
+  "review_branch": "draft",
+  "board_type": "engagement-length",
+  "repo": "https://github.com/justinanatta/humann-RM.git",
+  "transcripts_dir": "../transcripts/",
+  "preview_port": 8748,
+  "engagement": {
+    "kickoff": "2026-03-30",
+    "grid_start_monday": "2026-03-30",
+    "code_freeze": "2026-07-31",
+    "go_live": "2026-08-17",
+    "postlaunch_start": "2026-08-17",
+    "postlaunch_end": "2026-09-02",
+    "grid_end_monday": "2026-09-07",
+    "cadence_weeks": 2,
+    "columns_weekly": 24,
+    "current_sprint": "Sprint 6 (Jul 20 \u2013 31) \u2014 final dev sprint"
+  },
+  "jira": {
+    "site": "anatta-io.atlassian.net",
+    "project": "HUM",
+    "board": 435,
+    "plan": 432,
+    "confluence_space": "HU",
+    "slack_internal_channel": "C0AJZA1111V",
+    "slack_internal_name": "int-humann-redesign",
+    "slack_external_note": "external channel exists but Justin is not a member \u2014 not readable via MCP",
+    "access": "read-only \u2014 never write to Jira; milestone corrections live on our roadmap only",
+    "_lanes_note": "Verified keys as of Jul 23 (earlier board-agent keys HUM-326/295/325/293/294/292/291 do not exist in the plan). Per-page dev work lives as Tasks under HUM-277 Shopify Frontend.",
+    "lanes": {
+      "design_requirements": [
+        "HUM-322",
+        "HUM-686"
+      ],
+      "homepage": [],
+      "header_footer_global": [
+        "HUM-449",
+        "HUM-448",
+        "HUM-641"
+      ],
+      "plp": [
+        "HUM-452"
+      ],
+      "pdp_bundle": [
+        "HUM-324",
+        "HUM-451"
+      ],
+      "cart_checkout": [
+        "HUM-453"
+      ],
+      "account": [
+        "HUM-329",
+        "HUM-455"
+      ],
+      "knowledge_center": [
+        "HUM-344",
+        "HUM-283",
+        "HUM-307",
+        "HUM-454"
+      ],
+      "content_our_story": [
+        "HUM-688"
+      ],
+      "platform_infrastructure": [
+        "HUM-282",
+        "HUM-315"
+      ],
+      "measurement_cro": [
+        "HUM-280",
+        "HUM-281"
+      ],
+      "qa_e2e_launch": [
+        "HUM-258",
+        "HUM-269",
+        "HUM-268",
+        "HUM-259",
+        "HUM-257"
+      ]
+    },
+    "milestones_authoritative": {
+      "_note": "Engagement dates are authoritative; Jira markers are ~2wk stale. Show these on our roadmap, do NOT edit Jira.",
+      "code_freeze": {
+        "date": "2026-07-31",
+        "jira_marker": "HUM-405",
+        "jira_date": "2026-07-17"
+      },
+      "go_live": {
+        "date": "2026-08-17",
+        "jira_marker": "HUM-259",
+        "jira_date": "2026-08-03"
+      },
+      "postlaunch": {
+        "start": "2026-08-17",
+        "end": "2026-09-02",
+        "jira_marker": "HUM-257",
+        "jira_date": "2026-08-03/2026-08-19"
+      }
+    },
+    "visibility": {
+      "mode": "config",
+      "note": "Read-only in the client's Jira. Never label, edit, transition or comment. Seeded from the keys already on the published board.",
+      "include_parents": [],
+      "include_keys": [
+        "HUM-257",
+        "HUM-268",
+        "HUM-269",
+        "HUM-280",
+        "HUM-281",
+        "HUM-315",
+        "HUM-448",
+        "HUM-449",
+        "HUM-451",
+        "HUM-455",
+        "HUM-641",
+        "HUM-688"
+      ],
+      "exclude_keys": []
+    }
+  },
+  "deploy": {
+    "allow": []
+  }
+}
